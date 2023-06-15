@@ -33,8 +33,8 @@ public class RatingController {
 	@Qualifier("serviceFeign")
 	private RatingService ratingService;
 
-	@Value("${configuracion.texto}")
-	private String texto;
+//	@Value("${configuracion.texto}")
+//	private String texto;
 
 	@GetMapping()
 	public List<Book> listar(){
@@ -83,10 +83,10 @@ public class RatingController {
 	@GetMapping("/obtener-config")
 	public ResponseEntity<?> obtenerConfig(@Value("${server.port}") String puerto){
 
-		log.info(texto);
+//		log.info(texto);
 
 		Map<String, String> json = new HashMap<>();
-		json.put("texto", texto);
+//		json.put("texto", texto);
 		json.put("puerto", puerto);
 
 		if(env.getActiveProfiles().length>0 && env.getActiveProfiles()[0].equals("dev")) {

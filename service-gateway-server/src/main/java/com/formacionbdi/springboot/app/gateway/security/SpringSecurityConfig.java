@@ -17,16 +17,24 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityWebFilterChain configure(ServerHttpSecurity http) {
 		return http.authorizeExchange()
-				.pathMatchers("/api/security/oauth/**").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/productos/listar",
-						"/api/items/listar",
+				.pathMatchers("/api/security/oauth/**")
+						.permitAll()
+				.pathMatchers(HttpMethod.GET,
+						"/api/book/book",
+						"/api/rating/rating",
 						"/api/usuarios/usuarios",
 						"/api/items/ver/{id}/cantidad/{cantidad}",
 						"/api/productos/ver/{id}").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/usuarios/usuarios/{id}").hasAnyRole("ADMIN", "USER")
-				.pathMatchers("/api/productos/**", "/api/items/**", "/api/usuarios/usuarios/**").hasRole("ADMIN")
+				.pathMatchers(HttpMethod.GET,
+						"/api/usuarios/usuarios/{id}")
+						.hasAnyRole("ADMIN", "USER")
+				.pathMatchers("/api/productos/**",
+						"/api/items/**",
+						"/api/usuarios/usuarios/**")
+						.hasRole("ADMIN")
 				.anyExchange().authenticated()
-				.and().addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+				.and()
+				.addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 				.csrf().disable()
 				.build();
 	}

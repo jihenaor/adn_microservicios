@@ -39,7 +39,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/api/security/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,
-						"/book/book",
+						"/api/book/book",
 						"/rating/",
 						"/api/usuarios/usuarios").permitAll()
 				.antMatchers(HttpMethod.GET,
