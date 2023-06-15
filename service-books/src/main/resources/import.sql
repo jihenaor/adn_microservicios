@@ -1,0 +1,9 @@
+INSERT INTO books (title, author, stars) VALUES('Lib1', 'auth1', 1);
+INSERT INTO books (title, author, stars) VALUES('Lib2', 'auth2', 2);
+INSERT INTO books (title, author, stars) VALUES('Lib3', 'auth3', 3);
+INSERT INTO books (title, author, stars) VALUES('Lib4', 'auth4', 4);
+INSERT INTO books (title, author, stars) VALUES('Lib5', 'auth5', 5);
+INSERT INTO books (title, author, stars) VALUES('Lib6', 'auth6', 6);
+INSERT INTO books (title, author, stars) VALUES('Lib7', 'auth7', 7);
+INSERT INTO books (title, author, stars) VALUES('Lib8', 'auth8', 8);
+INSERT INTO books (title, author, stars) VALUES('Lib9', 'auth9', 9);

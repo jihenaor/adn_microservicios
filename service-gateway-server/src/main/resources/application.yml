@@ -1,0 +1,59 @@
+resilience4j:
+  circuitbreaker:
+    configs:
+      defecto:
+        sliding-window-size: 6
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 20s
+        permitted-number-of-calls-in-half-open-state: 4
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+    instances:
+      book:
+        base-config: defecto
+  timelimiter:
+    configs:
+      defecto:
+        timeout-duration: 2s
+    instances:
+      book:
+        base-config: defecto
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: service-book
+        uri: lb://service-book
+        predicates:
+          - Path=/api/book/**
+        filters:
+          - name: CircuitBreaker
+            args:
+              name: book
+              statusCodes: 500
+              fallbackUri: forward:/api/items/ver/9/cantidad/5
+          - StripPrefix=2
+          - EjemploCookie=Hola mi mensaje personalizado, usuario, AndresGuzman
+      - id: service-rating
+        uri: lb://service-rating
+        predicates:
+          - Path=/api/rating/**
+        filters:
+          - StripPrefix=2
+          - AddRequestHeader=token-request, 123456
+          - AddResponseHeader=token-response, 12345678
+          - SetResponseHeader=Content-Type, text/plain
+          - AddRequestParameter=nombre, andres
+      - id: servicio-oauth
+        uri: lb://servicio-oauth
+        predicates:
+          - Path=/api/security/**
+        filters:
+          - StripPrefix=2
+      - id: servicio-usuarios
+        uri: lb://servicio-usuarios
+        predicates:
+          - Path=/api/usuarios/**
+        filters:
+          - StripPrefix=2
