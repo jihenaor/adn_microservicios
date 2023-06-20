@@ -47,8 +47,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 						"/api/items/ver/{id}/cantidad/{cantidad}",
 						"/api/usuarios/usuarios/{id}").hasAnyRole("ADMIN", "USER")
 				.antMatchers(
-						"/api/productos/**",
-						"/api/items/**",
+						"/api/book/**",
+						"/api/rating/**",
 						"/api/usuarios/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 				.and()
