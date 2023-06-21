@@ -1,0 +1,91 @@
+version: '3'
+services:
+  service-config-service:
+    build:
+      context: ./service-config-server/
+      dockerfile: Dockerfile
+    container_name: config-service
+    restart: always
+    ports:
+      - 8888:8888
+    networks:
+      talleradn_network:
+        aliases: 
+          - configservicehost
+
+  service-eureka-service:
+    build:
+      context: ./service-eureka-server/
+      dockerfile: Dockerfile
+    container_name: eureka-service
+    restart: always
+    ports:
+      - 8761:8761
+    networks:
+      talleradn_network:
+        aliases:
+          - eurekaservicehost
+    depends_on:
+      - service-config-service
+
+  service-book-service:
+    build:
+      context: ./service-books/
+      dockerfile: Dockerfile
+    container_name: book
+    restart: always
+    networks:
+      talleradn_network:
+        aliases:
+          - bookhost
+    depends_on:
+      - service-eureka-service
+
+  service-zuul-service:
+    build:
+      context: ./service-zuul-server/
+      dockerfile: Dockerfile
+    container_name: zuul_server
+    restart: always
+    ports:
+      - 8090:8090
+    networks:
+      talleradn_network:
+        aliases:
+          - bookhost
+    depends_on:
+      - service-eureka-service
+    
+  service-usuarios:
+    build:
+      context: ./service-usuarios/
+      dockerfile: Dockerfile
+    container_name: usuarios
+    restart: always
+    networks:
+      talleradn_network:
+        aliases:
+          - usuarioshost
+    depends_on:
+      - service-eureka-service
+
+  service-oauth:
+    build:
+      context: ./service-oauth/
+      dockerfile: Dockerfile
+    container_name: oauth
+    restart: always
+    ports:
+      - 9100:9100
+    networks:
+      talleradn_network:
+        aliases:
+          - oauthhost
+    depends_on:
+      - service-config-service
+      - service-eureka-service
+
+networks:
+  talleradn_network:
+    name: talleradn_net
+    driver: bridge
