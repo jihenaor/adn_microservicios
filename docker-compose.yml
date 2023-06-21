@@ -7,7 +7,7 @@ services:
     container_name: config-service
     restart: always
     ports:
-      - 8888:8888
+      - 8889:8889
     networks:
       talleradn_network:
         aliases: 
