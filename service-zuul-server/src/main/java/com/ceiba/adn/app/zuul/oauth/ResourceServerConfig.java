@@ -26,8 +26,11 @@ import java.util.Base64;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	@Value("${config.security.oauth.jwt.key}")
-	private String jwtKey;
+//	@Value("${config.security.oauth.jwt.key}")
+//	private String jwtKey;
+
+
+	private String jwtKey = "algun_codigo_secreto_aeiou";
 
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {

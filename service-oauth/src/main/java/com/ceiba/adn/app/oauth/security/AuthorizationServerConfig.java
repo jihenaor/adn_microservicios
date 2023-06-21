@@ -44,11 +44,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//		String clientSecret = env.getProperty("config.security.oauth.client.secret");
-//		String clientId = env.getProperty("config.security.oauth.client.id");
+		String clientSecret = env.getProperty("config.security.oauth.client.secret");
+		String clientId = env.getProperty("config.security.oauth.client.id");
 
-		String clientId = "frontendapp";
-		String clientSecret = "12345";
+//		String clientId = "frontendapp";
+//		String clientSecret = "12345";
 
 		clients.inMemory().withClient(clientId)
 		.secret(passwordEncoder.encode(clientSecret))
