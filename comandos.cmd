@@ -1,2 +1,2 @@
 @echo off
-docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Posts}}" | Select-String -NotMatch "_kube-system"
+docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Ports}}" | Select-String -NotMatch "_kube-system"

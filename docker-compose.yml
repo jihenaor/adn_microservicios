@@ -20,7 +20,7 @@ services:
     container_name: eureka-service
     restart: always
     ports:
-      - 8761:8761
+      - "8761:8761"
     networks:
       talleradn_network:
         aliases:
@@ -108,8 +108,6 @@ services:
     restart: always
     ports:
       - "8002:8002"
-      - "8005:8005"
-      - "8007:8007"
     networks:
       talleradn_network:
         aliases:
@@ -147,7 +145,7 @@ services:
 #    container_name: zipkin-server
 #    restart: always
 #    ports:
-#      - 9411:9411
+#      - "9411:9411"
 #    environment:
 #      RABBIT_ADDRESSES: rabbitmq:5672
 #    networks:
