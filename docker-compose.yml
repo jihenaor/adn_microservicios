@@ -1,19 +1,19 @@
-version: '3'
+version: '3.8'
 services:
-  service-config-service:
+  config-service:
     build:
       context: ./service-config-server/
       dockerfile: Dockerfile
     container_name: config-service
     restart: always
     ports:
-      - 8888:8888
+      - "8889:8889"
     networks:
       talleradn_network:
         aliases: 
           - configservicehost
 
-  service-eureka-service:
+  eureka-service:
     build:
       context: ./service-eureka-server/
       dockerfile: Dockerfile
@@ -26,9 +26,25 @@ services:
         aliases:
           - eurekaservicehost
     depends_on:
-      - service-config-service
+      - config-service
 
-  service-book-service:
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    networks:
+      talleradn_network:
+        aliases:
+        - rabbitmqhost
+
+  book-service:
     build:
       context: ./service-books/
       dockerfile: Dockerfile
@@ -39,23 +55,22 @@ services:
         aliases:
           - bookhost
     depends_on:
-      - service-eureka-service
+      - config-service
+      - eureka-service
 
-  service-zuul-service:
+  book-service-v2:
     build:
-      context: ./service-zuul-server/
+      context: ./service-books/
       dockerfile: Dockerfile
-    container_name: zuul_server
+    container_name: book-v2
     restart: always
-    ports:
-      - 8090:8090
     networks:
       talleradn_network:
         aliases:
-          - bookhost
+          - bookhost-v2
     depends_on:
-      - service-eureka-service
-    
+      - eureka-service
+
   service-usuarios:
     build:
       context: ./service-usuarios/
@@ -67,7 +82,7 @@ services:
         aliases:
           - usuarioshost
     depends_on:
-      - service-eureka-service
+      - eureka-service
 
   service-oauth:
     build:
@@ -80,10 +95,65 @@ services:
     networks:
       talleradn_network:
         aliases:
-          - oauthhost
+        - oauthhost
     depends_on:
-      - service-config-service
-      - service-eureka-service
+      - config-service
+      - eureka-service
+
+  service-rating:
+    build:
+      context: ./service-rating/
+      dockerfile: Dockerfile
+    container_name: rating
+    restart: always
+    ports:
+      - 8002:8002
+    networks:
+      talleradn_network:
+        aliases:
+        - ratinghost
+    depends_on:
+      - config-service
+      - eureka-service
+      - book-service
+      - rabbitmq
+
+  zuul-service:
+    build:
+      context: ./service-zuul-server/
+      dockerfile: Dockerfile
+    container_name: zuul_server
+    restart: always
+    ports:
+      - 8090:8090
+    networks:
+      talleradn_network:
+        aliases:
+          - bookhost
+    depends_on:
+      - config-service
+      - eureka-service
+      - book-service
+      - service-rating
+      - rabbitmq
+
+
+#  service-zipkin:
+#    build:
+#      context: ./zipkin-server/
+#      dockerfile: Dockerfile
+#    container_name: zipkin-server
+#    restart: always
+#    ports:
+#      - 9411:9411
+#    environment:
+#      RABBIT_ADDRESSES: rabbitmq:5672
+#    networks:
+#      talleradn_network:
+#        aliases:
+#        - zipkinhost
+#    depends_on:
+#      - rabbitmq
 
 networks:
   talleradn_network:
