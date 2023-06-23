@@ -134,7 +134,7 @@ services:
       - config-service
       - eureka-service
       - book-service
-      - rating-service
+#      - rating-service
       - rabbitmq
 
 
