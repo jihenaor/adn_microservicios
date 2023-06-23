@@ -133,7 +133,7 @@ services:
     depends_on:
       - config-service
       - eureka-service
-      - book-service
+#      - book-service
 #      - rating-service
       - rabbitmq
 
