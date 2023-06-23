@@ -15,14 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 
 //@Service("serviceRestTemplate")
-public class RatingServiceImpl { //implements RatingService
+public class 	RatingServiceImpl { //implements RatingService
 
 	@Autowired
 	private RestTemplate clienteRest;
 	
 //	@Override
 	public List<Book> findAll() {
-		List<Book> books = Arrays.asList(clienteRest.getForObject("http://service-book/listar", Book[].class));
+		List<Book> books = Arrays.asList(clienteRest.getForObject("http://service-book/book", Book[].class));
 		
 		return books;
 	}
