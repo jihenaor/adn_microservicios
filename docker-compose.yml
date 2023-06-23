@@ -71,11 +71,11 @@ services:
     depends_on:
       - eureka-service
 
-  service-usuarios:
+  usuarios-service:
     build:
       context: ./service-usuarios/
       dockerfile: Dockerfile
-    container_name: usuarios
+    container_name: usuarios-service
     restart: always
     networks:
       talleradn_network:
@@ -84,11 +84,11 @@ services:
     depends_on:
       - eureka-service
 
-  service-oauth:
+  oauth-service:
     build:
       context: ./service-oauth/
       dockerfile: Dockerfile
-    container_name: oauth
+    container_name: oauth-service
     restart: always
     ports:
       - 9100:9100
@@ -100,14 +100,16 @@ services:
       - config-service
       - eureka-service
 
-  service-rating:
+  rating-service:
     build:
       context: ./service-rating/
       dockerfile: Dockerfile
-    container_name: rating
+    container_name: rating-service
     restart: always
     ports:
-      - 8002:8002
+      - "8002:8002"
+      - "8005:8005"
+      - "8007:8007"
     networks:
       talleradn_network:
         aliases:
@@ -134,7 +136,7 @@ services:
       - config-service
       - eureka-service
       - book-service
-      - service-rating
+      - rating-service
       - rabbitmq
 
 
@@ -154,6 +156,18 @@ services:
 #        - zipkinhost
 #    depends_on:
 #      - rabbitmq
+
+  zipkin-server:
+    image: zipkin-server:v1
+    ports:
+      - "9411:9411"
+    restart: always
+    networks:
+      talleradn_network:
+    depends_on: 
+      - rabbitmq
+    environment: 
+      RABBIT_ADDRESSES: rabbitmq:5672
 
 networks:
   talleradn_network:

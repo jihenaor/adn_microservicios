@@ -1,5 +1,5 @@
 FROM openjdk:11
 VOLUME /tmp
-ADD ./zipkin-server-2.12.9-exec.jar zipkin.jar
-
-ENTRYPOINT ["java","-jar","/zipkin.jar"]
+EXPOSE 9411
+ADD ./zipkin-server-2.12.9-exec.jar zipkin-server.jar
+ENTRYPOINT ["java","-jar","/zipkin-server.jar"]
