@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: service-book
+  config:
+    import:
+      -optional:configserver:http://config-server:8889
+
+  profiles:
+    active: dev

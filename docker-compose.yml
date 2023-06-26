@@ -1,5 +1,16 @@
 version: '3.8'
 services:
+  mysql8:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - talleradn_network
+    environment: 
+      MYSQL_DATABASE: db_book
+      MYSQL_ROOT_PASSWORD: sasa
+
   config-service:
     build:
       context: ./service-config-server/
