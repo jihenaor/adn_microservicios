@@ -1,34 +1,63 @@
-version: '3'
+version: '3.8'
 services:
-  service-config-service:
+  mysql8:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - talleradn_network
+    environment: 
+      MYSQL_DATABASE: db_book
+      MYSQL_ROOT_PASSWORD: sasa
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  config-service:
     build:
       context: ./service-config-server/
       dockerfile: Dockerfile
     container_name: config-service
     restart: always
     ports:
-      - 8889:8889
+      - "8889:8889"
     networks:
       talleradn_network:
         aliases: 
           - configservicehost
 
-  service-eureka-service:
+  eureka-service:
     build:
       context: ./service-eureka-server/
       dockerfile: Dockerfile
     container_name: eureka-service
     restart: always
     ports:
-      - 8761:8761
+      - "8761:8761"
     networks:
       talleradn_network:
         aliases:
           - eurekaservicehost
     depends_on:
-      - service-config-service
+      - config-service
 
-  service-book-service:
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    networks:
+      talleradn_network:
+        aliases:
+        - rabbitmqhost
+
+  book-service:
     build:
       context: ./service-books/
       dockerfile: Dockerfile
@@ -39,9 +68,70 @@ services:
         aliases:
           - bookhost
     depends_on:
-      - service-eureka-service
+      - config-service
+      - eureka-service
 
-  service-zuul-service:
+  book-service-v2:
+    build:
+      context: ./service-books/
+      dockerfile: Dockerfile
+    container_name: book-v2
+    restart: always
+    networks:
+      talleradn_network:
+        aliases:
+          - bookhost-v2
+    depends_on:
+      - eureka-service
+
+  usuarios-service:
+    build:
+      context: ./service-usuarios/
+      dockerfile: Dockerfile
+    container_name: usuarios-service
+    restart: always
+    networks:
+      talleradn_network:
+        aliases:
+          - usuarioshost
+    depends_on:
+      - eureka-service
+
+  oauth-service:
+    build:
+      context: ./service-oauth/
+      dockerfile: Dockerfile
+    container_name: oauth-service
+    restart: always
+    ports:
+      - 9100:9100
+    networks:
+      talleradn_network:
+        aliases:
+        - oauthhost
+    depends_on:
+      - config-service
+      - eureka-service
+
+  rating-service:
+    build:
+      context: ./service-rating/
+      dockerfile: Dockerfile
+    container_name: rating-service
+    restart: always
+    ports:
+      - "8002:8002"
+    networks:
+      talleradn_network:
+        aliases:
+        - ratinghost
+    depends_on:
+      - config-service
+      - eureka-service
+      - book-service
+      - rabbitmq
+
+  zuul-service:
     build:
       context: ./service-zuul-server/
       dockerfile: Dockerfile
@@ -54,38 +144,46 @@ services:
         aliases:
           - bookhost
     depends_on:
-      - service-eureka-service
-    
-  service-usuarios:
-    build:
-      context: ./service-usuarios/
-      dockerfile: Dockerfile
-    container_name: usuarios
-    restart: always
-    networks:
-      talleradn_network:
-        aliases:
-          - usuarioshost
-    depends_on:
-      - service-eureka-service
+      - config-service
+      - eureka-service
+#      - book-service
+#      - rating-service
+      - rabbitmq
 
-  service-oauth:
-    build:
-      context: ./service-oauth/
-      dockerfile: Dockerfile
-    container_name: oauth
-    restart: always
+
+#  service-zipkin:
+#    build:
+#      context: ./zipkin-server/
+#      dockerfile: Dockerfile
+#    container_name: zipkin-server
+#    restart: always
+#    ports:
+#      - "9411:9411"
+#    environment:
+#      RABBIT_ADDRESSES: rabbitmq:5672
+#    networks:
+#      talleradn_network:
+#        aliases:
+#        - zipkinhost
+#    depends_on:
+#      - rabbitmq
+
+  zipkin-server:
+    image: zipkin-server:v1
     ports:
-      - 9100:9100
+      - "9411:9411"
+    restart: always
     networks:
       talleradn_network:
-        aliases:
-          - oauthhost
-    depends_on:
-      - service-config-service
-      - service-eureka-service
+    depends_on: 
+      - rabbitmq
+    environment: 
+      RABBIT_ADDRESSES: rabbitmq:5672
 
 networks:
   talleradn_network:
     name: talleradn_net
     driver: bridge
+
+volumes:
+  mysql_data:
