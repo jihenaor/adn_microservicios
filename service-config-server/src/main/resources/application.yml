@@ -8,9 +8,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/jihenaor/config-files-prod.git
-#          uri: https://github.com/andresguzf/servicio-items-config.git
-#         username=jihenaor@gmail.com
-#         password=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
+          uri: https://github.com/jorgehenaoceiba/config-files-prod.git
+          #          uri: https://github.com/andresguzf/servicio-items-config.git
+          #         username=jihenaor@gmail.com
+          #         password=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
           default-label: "master"
           clone-on-start: true
