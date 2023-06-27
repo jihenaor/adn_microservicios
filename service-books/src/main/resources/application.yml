@@ -4,24 +4,26 @@ spring:
 
 server:
   port: ${PORT:0}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 ---
 spring:
   config.activate.on-profile: dev
   config:
     import: configserver:http://localhost:8889/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 ---
 spring:
   config.activate.on-profile: prod
   config:
     import: configserver:http://config-server:8889/
-
 eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
-
-#  spring.sleuth.sampler.probability=1.0
-#  spring.zipkin.base-url=http://localhost:9411/
-#spring.zipkin.sender.type=rabbit
+      defaultZone: http://eureka-service:8761/eureka
