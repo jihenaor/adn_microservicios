@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: service-book
+
+server:
+  port: ${PORT:0}
+---
+spring:
+  config.activate.on-profile: dev
+  config:
+    import: configserver:http://localhost:8889/
+---
+spring:
+  config.activate.on-profile: prod
+  config:
+    import: configserver:http://config-server:8889/
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
