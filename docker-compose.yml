@@ -11,19 +11,6 @@ services:
       MYSQL_DATABASE: db_book
       MYSQL_ROOT_PASSWORD: sasa
 
-  config-service:
-    build:
-      context: ./service-config-server/
-      dockerfile: Dockerfile
-    container_name: config-service
-    restart: always
-    ports:
-      - "8889:8889"
-    networks:
-      talleradn_network:
-        aliases: 
-          - configservicehost
-
   eureka-service:
     build:
       context: ./service-eureka-server/
@@ -36,8 +23,21 @@ services:
       talleradn_network:
         aliases:
           - eurekaservicehost
-    depends_on:
-      - config-service
+#    depends_on:
+#      - config-service
+
+  config-service:
+    build:
+      context: ./service-config-server/
+      dockerfile: Dockerfile
+    container_name: config-service
+    restart: always
+    ports:
+      - "8889:8889"
+    networks:
+      talleradn_network:
+        aliases: 
+          - configservicehost
 
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
