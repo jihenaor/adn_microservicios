@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name:config-server
+    name: config-server
   cloud:
     config:
       server:
@@ -14,3 +14,8 @@ spring:
           #         password=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
           default-label: "master"
           clone-on-start: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
