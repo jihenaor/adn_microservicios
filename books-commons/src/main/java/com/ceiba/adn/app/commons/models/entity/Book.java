@@ -1,5 +1,6 @@
 package com.ceiba.adn.app.commons.models.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -18,6 +19,8 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "books")
 @Data
+@AllArgsConstructor(staticName = "create")
+
 public class Book implements Serializable{
 
 	@Id

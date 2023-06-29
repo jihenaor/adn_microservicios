@@ -8,7 +8,7 @@ COPY book-commons-0.0.1-SNAPSHOT.jar /build/book-commons.jar
 
 RUN mvn install:install-file -Dfile=/build/book-commons.jar -DgroupId=com.ceiba.adn.app.commons -DartifactId=book-commons -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
 
-RUN mvn clean package -DskipTests -Dspring.profiles.active=prod
+RUN mvn clean package 
 
 FROM bellsoft/liberica-openjdk-alpine:17.0.7
 #FROM openjdk:17

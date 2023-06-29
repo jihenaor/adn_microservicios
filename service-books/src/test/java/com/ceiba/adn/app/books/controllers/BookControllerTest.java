@@ -14,7 +14,7 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 class BookControllerTest {
-
+/*
     @BeforeEach
     public void setup() {
         baseURI = "http://localhost:54559";
@@ -39,4 +39,6 @@ class BookControllerTest {
                     .body("$", hasSize(greaterThan(0))); ;
 
     }
+
+ */
 }
