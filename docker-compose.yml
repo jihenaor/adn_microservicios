@@ -49,7 +49,7 @@ services:
     container_name: config-server
     restart: always
     ports:
-      - "8889:8889"
+      - "8081:8081"
     networks:
       talleradn_network:
         aliases: 
