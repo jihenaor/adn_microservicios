@@ -1,6 +1,7 @@
 spring:
   application:
-    name: user-service
+    name: service-book
+#  config.activate.on-profile: dev
   cloud:
     config:
       enabled: true

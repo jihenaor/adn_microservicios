@@ -1,10 +1,3 @@
-spring:
-  application:
-    name: service-book
-  config.activate.on-profile: dev
-  config:
-    import: configserver:http://localhost:8889/
-
 server:
   port: ${PORT:0}
 

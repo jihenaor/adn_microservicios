@@ -22,6 +22,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.ceiba.adn.app.commons</groupId>
 			<artifactId>book-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
