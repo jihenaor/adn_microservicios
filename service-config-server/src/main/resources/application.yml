@@ -1,21 +1,36 @@
-server:
-  port: 8889
+#server:
+#  port: 8889
 
+#spring:
+#  application:
+#    name: config-server
+#  cloud:
+#    config:
+#      allow-override: true
+#      server:
+#        git:
+#          uri: https://github.com/jorgehenaoceiba/
+          #          uri: https://github.com/andresguzf/servicio-items-config.git
+          #         username=jihenaor@gmail.com
+          #         password=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
+#          default-label: "master"
+#          clone-on-start: true
+
+server:
+  port: 8081
 spring:
   application:
-    name: config-server
+    name: config-service
+
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/jorgehenaoceiba/config-files-prod
-          #          uri: https://github.com/andresguzf/servicio-items-config.git
-          #         username=jihenaor@gmail.com
-          #         password=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
-          default-label: "master"
-          clone-on-start: true
+          default-label: master
+          uri: https://github.com/jihenaor/config-files
+          search-paths: config-data
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
