@@ -1,18 +1,4 @@
 spring:
-  application:
-    name: service-book
-  config:
-    import: configserver:http://config-server:8889/
-
-  datasource:
-    url: jdbc:mysql://mysql8:3306/db_book?serverTimezone=America/Santiago&allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: sasa
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: create
 
 logging:
   level:

@@ -5,4 +5,7 @@ spring:
   cloud:
     config:
       enabled: true
-      uri: http://localhost:8081
+#      uri: http://localhost:8081
+      uri: http://config-server:8081
+#        uri: http://configservicehost:8081  otra prueba
+#        import: configserver:http://config-server:8081/
