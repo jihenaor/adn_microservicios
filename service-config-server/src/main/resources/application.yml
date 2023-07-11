@@ -10,7 +10,7 @@ spring:
         git:
           default-label: master
           uri: https://github.com/jihenaor/config-files
-          search-paths: config-data
+          search-paths: config-data-prod
 
 #eureka:
 #  client:
