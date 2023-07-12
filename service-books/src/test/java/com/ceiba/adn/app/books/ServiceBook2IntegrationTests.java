@@ -2,6 +2,7 @@ package com.ceiba.adn.app.books;
 
 //import com.vinsguru.jobservice.dto.JobDto;
 //import com.vinsguru.jobservice.compose.BaseTest;
+
 import com.ceiba.adn.app.books.models.service.IBookService;
 import com.ceiba.adn.app.commons.models.entity.Book;
 import org.junit.Before;
@@ -9,12 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@SpringBootTest
 @AutoConfigureWebTestClient
-//@TestPropertySource(locations = "classpath:bootstrap.yaml")
+@TestPropertySource(locations = "classpath:bootstrap.yaml")
 
 class ServiceBook2IntegrationTests {
 
@@ -38,6 +40,21 @@ class ServiceBook2IntegrationTests {
 	public void setUp() {
 		path = "/book";
 	}
+
+	@Container
+	public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.26")
+			.withDatabaseName("test_db")
+				.withUsername("test_user")
+			.withPassword("test_password");
+
+	@DynamicPropertySource
+	static void registerProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+		registry.add("spring.datasource.username", mysqlContainer::getUsername);
+		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+	}
+
+	// Resto del código de la clase de prueba
 
 	@Test
 	public void allBooksTest() {
@@ -64,6 +81,7 @@ class ServiceBook2IntegrationTests {
 				.bodyValue(newBook)
 				.exchange()
 				.expectStatus().is2xxSuccessful();
+
 
 		int booksCountAfter = bookService.findAll().size();
 		assertEquals(booksCountBefore + 1, booksCountAfter);
